@@ -1,0 +1,4415 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucrecia Canteen Ordering System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-light: #eef6ff;
+            --primary-hover: #357abd;
+            --accent: #70b0ff;
+            --success: #52c41a;
+            --success-hover: #389e0d;
+            --danger: #ff4d4f;
+            --warning: #faad14;
+            --bg-color: #f0f4f9;
+            --card-border: #d2e3f7;
+            --text-main: #2c3e50;
+            --text-muted: #6a7b8c;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito',sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#d0e3ff 1.5px,transparent 1.5px);
+            background-size: 24px 24px;
+            color: var(--text-main);
+            padding: 24px 12px;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, .brand-font {
+            font-family: 'Fredoka',sans-serif;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(255,255,255,.96);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(74,144,226,.12);
+            border: 2px solid #fff;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg,#4a90e2,#6aa5ed);
+            color: white;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 14px rgba(74,144,226,.25);
+        }
+
+            .navbar h2 {
+                font-size: 1.6rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+        #user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            font-family: 'Fredoka',sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            transition: .2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+            .btn:hover:not(:disabled) {
+                transform: translateY(-2px);
+            }
+
+            .btn:disabled {
+                opacity: .5;
+                cursor: not-allowed;
+            }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--primary-hover);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: var(--success-hover);
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #d9363e;
+            }
+
+        .btn-secondary {
+            background: #8ca3ba;
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--card-border);
+            color: var(--text-main);
+        }
+
+            .btn-outline:hover {
+                background: var(--primary-light);
+                border-color: var(--primary);
+            }
+
+        .auth-card {
+            max-width: 420px;
+            margin: 20px auto;
+            padding: 30px;
+            border: 2px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            background: white;
+            box-shadow: 0 8px 20px rgba(74,144,226,.08);
+        }
+
+            .auth-card h3 {
+                margin-bottom: 20px;
+                color: var(--primary);
+                text-align: center;
+                font-size: 1.5rem;
+            }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 700;
+                font-size: 13px;
+                color: var(--text-muted);
+                text-transform: uppercase;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--card-border);
+            border-radius: var(--radius-md);
+            font-family: 'Nunito',sans-serif;
+            font-size: 15px;
+            background: #fafcff;
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--primary);
+                background: white;
+                box-shadow: 0 0 0 4px rgba(74,144,226,.15);
+            }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+            .password-wrapper .form-control {
+                padding-right: 45px;
+            }
+
+        .btn-toggle-pass {
+            position: absolute;
+            right: 12px;
+            top: 9px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: var(--primary-light);
+            padding: 8px;
+            border-radius: 25px;
+        }
+
+            .role-selector label {
+                cursor: pointer;
+                font-family: 'Fredoka',sans-serif;
+                padding: 6px 16px;
+                border-radius: 20px;
+            }
+
+            .role-selector input {
+                display: none;
+            }
+
+            .role-selector label:has(input:checked) {
+                background: var(--primary);
+                color: white;
+            }
+
+        .auth-toggle {
+            font-size: 14px;
+            margin-top: 18px;
+            cursor: pointer;
+            color: var(--primary);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .section-title {
+            margin: 30px 0 15px;
+            font-size: 1.35rem;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 8px;
+        }
+
+        .category-box {
+            background: white;
+            border: 2px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+            .category-box h4 {
+                font-size: 1.2rem;
+                color: var(--primary);
+                margin-bottom: 16px;
+                padding-bottom: 8px;
+                border-bottom: 2px dashed var(--card-border);
+            }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+            gap: 16px;
+        }
+
+        .menu-card {
+            border: 2px solid var(--card-border);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            background: var(--primary-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: .25s;
+        }
+
+            .menu-card:hover {
+                transform: translateY(-4px);
+                border-color: var(--primary);
+                background: white;
+                box-shadow: 0 8px 16px rgba(74,144,226,.12);
+            }
+
+            .menu-card h4 {
+                font-size: 1.05rem;
+                margin-bottom: 6px;
+                border: none;
+                padding: 0;
+                color: var(--text-main);
+            }
+
+            .menu-card .price {
+                font-family: 'Fredoka',sans-serif;
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--primary);
+                margin-bottom: 12px;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 2px solid var(--card-border);
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--primary-light);
+            font-family: 'Fredoka',sans-serif;
+            color: var(--primary);
+            border-bottom: 2px solid var(--card-border);
+        }
+
+        td {
+            border-bottom: 1px solid #f0f4f9;
+        }
+
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .receipt-view {
+            max-width: 440px;
+            margin: 20px auto;
+            border: 3px dashed var(--primary);
+            padding: 32px 24px;
+            background: white;
+            text-align: center;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 25px rgba(74,144,226,.12);
+        }
+
+            .receipt-view h3 {
+                color: var(--primary);
+            }
+
+            .receipt-view h2 {
+                font-size: 2.2rem;
+                margin: 12px 0;
+            }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Fredoka',sans-serif;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .badge-ready {
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .badge-preparing {
+            background: #fffbe6;
+            color: #faad14;
+            border: 1px solid #ffe58f;
+        }
+
+        .badge-completed {
+            background: #f6ffed;
+            color: #389e0d;
+            border: 1px solid #b7eb8f;
+        }
+
+        .badge-cancelled {
+            background: #fff2f0;
+            color: #ff4d4f;
+            border: 1px solid #ffccc7;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .alert-danger {
+            background: #fff2f0;
+            color: #ff4d4f;
+            border: 2px solid #ffccc7;
+        }
+
+        .alert-success {
+            background: #f6ffed;
+            color: #52c41a;
+            border: 2px solid #b7eb8f;
+        }
+
+        .admin-add-form,
+        .report-filter-bar {
+            background: var(--primary-light);
+            border: 2px solid var(--card-border);
+            padding: 18px;
+            border-radius: var(--radius-md);
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+            .admin-add-form .form-group {
+                margin-bottom: 0;
+                flex: 1;
+                min-width: 160px;
+            }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .filter-item label {
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--text-muted);
+                text-transform: uppercase;
+            }
+
+        .report-summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 2px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+        }
+
+            .summary-card h5 {
+                font-size: 12px;
+                color: var(--text-muted);
+                margin-bottom: 6px;
+                text-transform: uppercase;
+            }
+
+            .summary-card .value {
+                font-family: 'Fredoka',sans-serif;
+                font-size: 1.8rem;
+                color: var(--primary);
+            }
+
+            .summary-card.revenue .value {
+                color: var(--success);
+            }
+
+        .revenue-note {
+            margin-top: 15px;
+            background: #f6ffed;
+            border: 2px solid #b7eb8f;
+            color: #389e0d;
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-help {
+            background: var(--primary-light);
+            border: 2px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+            .status-help p {
+                margin: 5px 0;
+            }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(44,62,80,.6);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,.25);
+        }
+
+        .modal-title {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+            .modal-buttons .btn {
+                flex: 1;
+            }
+
+        @media(max-width:700px) {
+            .container {
+                padding: 15px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .modal-box {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="navbar">
+            <h2>🍱 Lucrecia Canteen</h2>
+
+            <div id="user-info" class="hidden">
+                <span id="display-username"></span>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+
+        <!-- ================= AUTH ================= -->
+
+        <div id="section-auth">
+
+            <div id="form-login" class="auth-card">
+
+                <h3 id="auth-title">Welcome Back! ✨</h3>
+
+                <div class="role-selector">
+
+                    <label>
+                        <input type="radio"
+                               name="role"
+                               value="customer"
+                               checked
+                               onclick="setRole('customer')">
+                        👤 Customer
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="role"
+                               value="admin"
+                               onclick="setRole('admin')">
+                        🔑 Admin
+                    </label>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+
+                    <input id="login-username"
+                           class="form-control"
+                           placeholder="Enter username">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+
+                    <div class="password-wrapper">
+
+                        <input id="login-password"
+                               type="password"
+                               class="form-control"
+                               placeholder="Enter password">
+
+                        <button type="button"
+                                class="btn-toggle-pass"
+                                onclick="togglePasswordVisibility('login-password',this)">
+                            👁️
+                        </button>
+
+                    </div>
+                </div>
+
+                <div id="auth-error"
+                     class="alert alert-danger hidden"></div>
+
+                <button class="btn btn-primary"
+                        style="width:100%;padding:12px"
+                        onclick="login()">
+                    Log In
+                </button>
+
+                <div id="register-link"
+                     class="auth-toggle"
+                     onclick="toggleAuthForm('register')">
+                    New Customer? Create account
+                </div>
+
+            </div>
+
+
+            <div id="form-register"
+                 class="auth-card hidden">
+
+                <h3>Create Account 🌟</h3>
+
+                <div class="form-group">
+                    <label>Username</label>
+
+                    <input id="reg-username"
+                           class="form-control"
+                           placeholder="Choose username">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+
+                    <div class="password-wrapper">
+
+                        <input id="reg-password"
+                               type="password"
+                               class="form-control"
+                               placeholder="Choose password">
+
+                        <button type="button"
+                                class="btn-toggle-pass"
+                                onclick="togglePasswordVisibility('reg-password',this)">
+                            👁️
+                        </button>
+
+                    </div>
+                </div>
+
+                <div id="reg-error"
+                     class="alert alert-danger hidden"></div>
+
+                <div id="reg-success"
+                     class="alert alert-success hidden"></div>
+
+                <button class="btn btn-success"
+                        style="width:100%;padding:12px"
+                        onclick="registerCustomer()">
+                    Register Account
+                </button>
+
+                <div class="auth-toggle"
+                     onclick="toggleAuthForm('login')">
+                    Already have an account? Log In
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= CUSTOMER ================= -->
+
+        <div id="section-customer" class="hidden">
+
+            <div id="customer-order-view">
+
+                <h3 class="section-title">✨ Menu Favorites</h3>
+
+                <div class="category-box">
+
+                    <h4>🍱 Delicious Meals</h4>
+
+                    <div class="menu-grid"
+                         id="menu-container-meals">
+                    </div>
+
+                </div>
+
+
+                <div class="category-box">
+
+                    <h4>🥤 Refreshing Drinks</h4>
+
+                    <div class="menu-grid"
+                         id="menu-container-beverages">
+                    </div>
+
+                </div>
+
+
+                <h3 class="section-title">🛒 Your Cart</h3>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="cart-table-body">
+
+                        <tr>
+                            <td colspan="4"
+                                style="text-align:center;color:var(--text-muted)">
+                                Cart is empty
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+                <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-top:20px;
+            gap:15px;
+            flex-wrap:wrap;
+        ">
+
+                    <h4 style="font-size:1.3rem">
+
+                        Total:
+
+                        <span style="color:var(--primary)">
+                            ₱<span id="cart-total">0.00</span>
+                        </span>
+
+                    </h4>
+
+                    <button id="btn-checkout"
+                            class="btn btn-success"
+                            style="padding:12px 24px"
+                            onclick="checkout()"
+                            disabled>
+                        Place Order ✨
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMER RECEIPT -->
+
+            <div id="customer-receipt-screen"
+                 class="hidden">
+
+                <div class="receipt-view">
+
+                    <h3>🧾 Digital Claim Receipt</h3>
+
+                    <p style="font-size:13px;color:var(--text-muted)">
+                        Show this receipt to canteen staff to claim your order!
+                    </p>
+
+                    <h2 id="receipt-id">#ORD-000</h2>
+
+                    <p>
+
+                        Status:
+
+                        <span id="receipt-status"
+                              class="badge badge-preparing">
+                            Preparing
+                        </span>
+
+                    </p>
+
+                    <hr style="
+                border-top:2px dashed var(--card-border);
+                margin:18px 0;
+            ">
+
+                    <div id="receipt-items"
+                         style="text-align:left;max-width:350px;margin:auto">
+                    </div>
+
+                    <h4 style="
+                text-align:left;
+                max-width:350px;
+                margin:18px auto;
+            ">
+
+                        Total:
+                        ₱<span id="receipt-total">0.00</span>
+
+                    </h4>
+
+                    <button class="btn btn-primary"
+                            style="width:100%;padding:12px"
+                            onclick="startNewOrder()">
+                        Order Again 🍽️
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= ADMIN ================= -->
+
+        <div id="section-admin"
+             class="hidden">
+
+            <h3 class="section-title">
+                🍔 Manage Menu Items
+            </h3>
+
+            <div class="admin-add-form">
+
+                <div class="form-group">
+
+                    <label>Item Name</label>
+
+                    <input id="new-item-name"
+                           class="form-control"
+                           placeholder="e.g. Egg w/ Rice">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Price (₱)</label>
+
+                    <input id="new-item-price"
+                           type="number"
+                           class="form-control"
+                           placeholder="e.g. 50"
+                           step=".50">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Category</label>
+
+                    <select id="new-item-category"
+                            class="form-control">
+
+                        <option value="meal">
+                            🍱 Meal
+                        </option>
+
+                        <option value="beverage">
+                            🥤 Beverage
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button class="btn btn-success"
+                        onclick="addMenuItem()">
+                    + Add Item
+                </button>
+
+            </div>
+
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="admin-menu-list"></tbody>
+
+            </table>
+
+
+            <!-- ACTIVE ORDERS -->
+
+            <h3 class="section-title">
+                ⏳ Active Orders Queue
+            </h3>
+
+            <div class="status-help">
+
+                <p>
+                    🟡 <strong>Preparing:</strong>
+                    Order is being prepared.
+                </p>
+
+                <p>
+                    🔵 <strong>Ready:</strong>
+                    Customer can pick up the order.
+                </p>
+
+                <p>
+                    🟢 <strong>Completed / Picked Up:</strong>
+                    Order has been picked up and is automatically added to Monthly Revenue.
+                </p>
+
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="admin-active-orders"></tbody>
+
+            </table>
+
+
+            <!-- REPORT -->
+
+            <h3 class="section-title">
+                📊 Sales & Revenue Report
+            </h3>
+
+
+            <div class="report-filter-bar">
+
+                <div class="filter-item">
+
+                    <label>View Period</label>
+
+                    <select id="filter-type"
+                            class="form-control"
+                            onchange="handleFilterTypeChange()">
+
+                        <option value="all">
+                            All Time
+                        </option>
+
+                        <option value="month"
+                                selected>
+                            Monthly Report
+                        </option>
+
+                        <option value="date">
+                            Daily Report
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-item"
+                     id="month-select-group">
+
+                    <label>Select Month</label>
+
+                    <input type="month"
+                           id="filter-month"
+                           class="form-control"
+                           onchange="renderAdminTables()">
+
+                </div>
+
+
+                <div class="filter-item hidden"
+                     id="date-select-group">
+
+                    <label>Select Date</label>
+
+                    <input type="date"
+                           id="filter-date"
+                           class="form-control"
+                           onchange="renderAdminTables()">
+
+                </div>
+
+
+                <div class="filter-item"
+                     style="
+                margin-left:auto;
+                flex-direction:row;
+                gap:6px;
+                flex-wrap:wrap;
+             ">
+
+                    <button class="btn btn-outline btn-sm"
+                            onclick="setPresetFilter('today')">
+                        Today
+                    </button>
+
+                    <button class="btn btn-outline btn-sm"
+                            onclick="setPresetFilter('this-month')">
+                        This Month
+                    </button>
+
+                    <button class="btn btn-danger btn-sm"
+                            onclick="resetPastReceipts()">
+                        🗑️ Reset Past Receipts
+                    </button>
+
+                    <button class="btn btn-danger btn-sm"
+                            onclick="resetMonthlyRevenue()">
+                        🔄 Reset Monthly Revenue
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-summary-cards">
+
+                <div class="summary-card revenue">
+
+                    <h5>
+                        Monthly Revenue
+                    </h5>
+
+                    <div class="value">
+                        ₱<span id="admin-total-revenue">0.00</span>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h5>
+                        Orders Picked Up
+                    </h5>
+
+                    <div class="value"
+                         id="admin-total-orders">
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h5>
+                        Avg. Order Value
+                    </h5>
+
+                    <div class="value">
+                        ₱<span id="admin-avg-order">0.00</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="revenue-note">
+
+                💰 Only orders marked
+                <strong>Completed / Picked Up</strong>
+                are counted in revenue.
+
+                When an order is picked up, it automatically appears
+                in the selected monthly revenue report.
+
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date & Time</th>
+                        <th>Customer</th>
+                        <th>Items Sold</th>
+                        <th>Total Cash</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="admin-sales-report"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= EXTRA RICE MODAL ================= -->
+
+    <div id="customize-modal"
+         class="modal-overlay hidden">
+
+        <div class="modal-box">
+
+            <h3 class="modal-title">
+                🍚 Customize Your Meal
+            </h3>
+
+            <p id="customize-item-name"
+               style="
+                text-align:center;
+                font-weight:bold;
+                font-size:18px;
+           ">
+            </p>
+
+            <p style="
+            text-align:center;
+            color:var(--text-muted);
+            margin-top:5px;
+        ">
+                Would you like extra rice?
+            </p>
+
+
+            <div style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:25px;
+            margin:25px 0;
+        ">
+
+                <button class="btn btn-outline"
+                        onclick="changeExtraRice(-1)"
+                        style="font-size:24px;width:50px">
+                    −
+                </button>
+
+                <div style="text-align:center">
+
+                    <div id="extra-rice-quantity"
+                         style="
+                        font-family:Fredoka;
+                        font-size:35px;
+                        color:var(--primary);
+                     ">
+                        0
+                    </div>
+
+                    <small>
+                        extra rice
+                    </small>
+
+                </div>
+
+                <button class="btn btn-primary"
+                        onclick="changeExtraRice(1)"
+                        style="font-size:24px;width:50px">
+                    +
+                </button>
+
+            </div>
+
+
+            <div style="
+            background:var(--primary-light);
+            padding:12px;
+            border-radius:12px;
+            text-align:center;
+            font-weight:bold;
+        ">
+
+                Extra rice:
+                ₱<span id="extra-rice-price">0.00</span>
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button class="btn btn-secondary"
+                        onclick="closeCustomizeModal()">
+                    Cancel
+                </button>
+
+                <button class="btn btn-success"
+                        onclick="confirmCustomization()">
+                    Add to Cart ✓
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CONFIRM ORDER MODAL ================= -->
+
+    <div id="order-confirm-modal"
+         class="modal-overlay hidden">
+
+        <div class="modal-box">
+
+            <h3 class="modal-title">
+                🛒 Confirm Your Order
+            </h3>
+
+            <p style="
+            text-align:center;
+            color:var(--text-muted);
+        ">
+                Please check your order before submitting.
+            </p>
+
+
+            <div id="order-confirm-items"
+                 style="
+                max-height:300px;
+                overflow-y:auto;
+                margin-top:15px;
+             ">
+            </div>
+
+
+            <div style="
+            border-top:2px dashed var(--card-border);
+            padding-top:15px;
+            margin-top:15px;
+            display:flex;
+            justify-content:space-between;
+            font-family:Fredoka;
+            font-size:20px;
+        ">
+
+                <span>Total</span>
+
+                <span style="color:var(--primary)">
+                    ₱<span id="order-confirm-total">0.00</span>
+                </span>
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button class="btn btn-secondary"
+                        onclick="cancelOrderConfirmation()">
+                    Cancel
+                </button>
+
+                <button class="btn btn-success"
+                        onclick="confirmOrder()">
+                    Confirm Order ✓
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* =========================================================
+           CONFIGURATION
+        ========================================================= */
+
+        const ADMIN_USER = "CanteenLucrecia";
+        const ADMIN_PASS = "CanteenLRKSHS";
+
+        const EXTRA_RICE_PRICE = 15;
+
+
+        /* =========================================================
+           DATABASE
+        ========================================================= */
+
+        let menu =
+            JSON.parse(
+                localStorage.getItem("lucrecia_menu")
+            ) ||
+            [
+                {
+                    id: 1,
+                    name: "Chicken Adobo w/ Rice",
+                    price: 65,
+                    category: "meal"
+                },
+                {
+                    id: 2,
+                    name: "Pork Sinigang w/ Rice",
+                    price: 70,
+                    category: "meal"
+                },
+                {
+                    id: 3,
+                    name: "Egg w/ Rice",
+                    price: 45,
+                    category: "meal"
+                },
+                {
+                    id: 4,
+                    name: "Spaghetti",
+                    price: 40,
+                    category: "meal"
+                },
+                {
+                    id: 5,
+                    name: "Empanada",
+                    price: 20,
+                    category: "meal"
+                },
+                {
+                    id: 6,
+                    name: "Iced Tea",
+                    price: 15,
+                    category: "beverage"
+                },
+                {
+                    id: 7,
+                    name: "Bottled Water",
+                    price: 10,
+                    category: "beverage"
+                }
+            ];
+
+
+        let registeredCustomers =
+            JSON.parse(
+                localStorage.getItem("lucrecia_customers")
+            ) ||
+            [
+                {
+                    username: "student1",
+                    password: "123"
+                }
+            ];
+
+
+        let database =
+            JSON.parse(
+                localStorage.getItem("lucrecia_orders")
+            ) || [];
+
+
+        let orderCounter =
+            parseInt(
+                localStorage.getItem(
+                    "lucrecia_order_counter"
+                )
+            ) || 101;
+
+
+        /*
+            Stores the exact time a monthly revenue report
+            was reset.
+
+            Example:
+            {
+                "2026-08": "2026-08-24T10:30:00.000Z"
+            }
+        */
+        let revenueResets =
+            JSON.parse(
+                localStorage.getItem(
+                    "lucrecia_revenue_resets"
+                )
+            ) || {};
+
+
+        let selectedRole = "customer";
+        let currentUser = "";
+
+        let cart = [];
+
+        let customizationItem = null;
+        let extraRiceQuantity = 0;
+
+
+        /* =========================================================
+           STORAGE
+        ========================================================= */
+
+        function saveToStorage() {
+
+            localStorage.setItem(
+                "lucrecia_menu",
+                JSON.stringify(menu)
+            );
+
+            localStorage.setItem(
+                "lucrecia_customers",
+                JSON.stringify(
+                    registeredCustomers
+                )
+            );
+
+            localStorage.setItem(
+                "lucrecia_orders",
+                JSON.stringify(database)
+            );
+
+            localStorage.setItem(
+                "lucrecia_order_counter",
+                orderCounter
+            );
+
+            localStorage.setItem(
+                "lucrecia_revenue_resets",
+                JSON.stringify(
+                    revenueResets
+                )
+            );
+        }
+
+
+        /* =========================================================
+           START
+        ========================================================= */
+
+        window.onload = function () {
+
+            renderMenu();
+
+            initFilterDefaults();
+
+            handleFilterTypeChange();
+
+        };
+
+
+        /* =========================================================
+           AUTHENTICATION
+        ========================================================= */
+
+        function setRole(role) {
+
+            selectedRole = role;
+
+            const registerLink =
+                document.getElementById(
+                    "register-link"
+                );
+
+            const title =
+                document.getElementById(
+                    "auth-title"
+                );
+
+
+            if (role === "admin") {
+
+                registerLink.classList.add(
+                    "hidden"
+                );
+
+                title.innerText =
+                    "Admin Portal 🔑";
+
+            } else {
+
+                registerLink.classList.remove(
+                    "hidden"
+                );
+
+                title.innerText =
+                    "Welcome Back! ✨";
+            }
+        }
+
+
+        function togglePasswordVisibility(
+            inputId,
+            button
+        ) {
+
+            const input =
+                document.getElementById(
+                    inputId
+                );
+
+
+            if (input.type === "password") {
+
+                input.type = "text";
+
+                button.innerText = "🙈";
+
+            } else {
+
+                input.type = "password";
+
+                button.innerText = "👁️";
+            }
+        }
+
+
+        function toggleAuthForm(mode) {
+
+            document
+                .getElementById("auth-error")
+                .classList.add("hidden");
+
+            document
+                .getElementById("reg-error")
+                .classList.add("hidden");
+
+            document
+                .getElementById("reg-success")
+                .classList.add("hidden");
+
+
+            if (mode === "register") {
+
+                document
+                    .getElementById("form-login")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("form-register")
+                    .classList.remove("hidden");
+
+            } else {
+
+                document
+                    .getElementById("form-register")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("form-login")
+                    .classList.remove("hidden");
+            }
+        }
+
+
+        function registerCustomer() {
+
+            const username =
+                document
+                    .getElementById(
+                        "reg-username"
+                    )
+                    .value
+                    .trim();
+
+            const password =
+                document
+                    .getElementById(
+                        "reg-password"
+                    )
+                    .value
+                    .trim();
+
+
+            const error =
+                document.getElementById(
+                    "reg-error"
+                );
+
+            const success =
+                document.getElementById(
+                    "reg-success"
+                );
+
+
+            error.classList.add("hidden");
+            success.classList.add("hidden");
+
+
+            if (!username || !password) {
+
+                error.innerText =
+                    "Please fill in all fields.";
+
+                error.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+
+            if (
+                username.toLowerCase() ===
+                ADMIN_USER.toLowerCase()
+            ) {
+
+                error.innerText =
+                    "This username is reserved.";
+
+                error.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+
+            const exists =
+                registeredCustomers.find(
+                    c =>
+                        c.username.toLowerCase() ===
+                        username.toLowerCase()
+                );
+
+
+            if (exists) {
+
+                error.innerText =
+                    "Username already exists.";
+
+                error.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+
+            registeredCustomers.push({
+                username: username,
+                password: password
+            });
+
+
+            saveToStorage();
+
+
+            success.innerText =
+                "Account created successfully! You can now log in.";
+
+            success.classList.remove(
+                "hidden"
+            );
+
+
+            document.getElementById(
+                "reg-username"
+            ).value = "";
+
+            document.getElementById(
+                "reg-password"
+            ).value = "";
+        }
+
+
+        function login() {
+
+            const username =
+                document
+                    .getElementById(
+                        "login-username"
+                    )
+                    .value
+                    .trim();
+
+            const password =
+                document
+                    .getElementById(
+                        "login-password"
+                    )
+                    .value
+                    .trim();
+
+
+            const error =
+                document.getElementById(
+                    "auth-error"
+                );
+
+
+            error.classList.add(
+                "hidden"
+            );
+
+
+            if (!username || !password) {
+
+                error.innerText =
+                    "Please enter username and password.";
+
+                error.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+
+            /* ADMIN LOGIN */
+
+            if (selectedRole === "admin") {
+
+                if (
+                    username === ADMIN_USER &&
+                    password === ADMIN_PASS
+                ) {
+
+                    currentUser = username;
+
+                    showAdmin();
+
+                    return;
+
+                } else {
+
+                    error.innerText =
+                        "Invalid administrator credentials.";
+
+                    error.classList.remove(
+                        "hidden"
+                    );
+
+                    return;
+                }
+            }
+
+
+            /* CUSTOMER LOGIN */
+
+            const customer =
+                registeredCustomers.find(
+                    c =>
+                        c.username === username &&
+                        c.password === password
+                );
+
+
+            if (!customer) {
+
+                error.innerText =
+                    "Invalid customer username or password.";
+
+                error.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+
+            currentUser = username;
+
+            showCustomer();
+        }
+
+
+        function logout() {
+
+            currentUser = "";
+
+            cart = [];
+
+
+            document
+                .getElementById(
+                    "section-auth"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "section-customer"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "section-admin"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "user-info"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document.getElementById(
+                "login-username"
+            ).value = "";
+
+            document.getElementById(
+                "login-password"
+            ).value = "";
+
+
+            renderCart();
+        }
+
+
+        /* =========================================================
+           SCREEN MANAGEMENT
+        ========================================================= */
+
+        function showCustomer() {
+
+            document
+                .getElementById(
+                    "section-auth"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "section-admin"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "section-customer"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "customer-order-view"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "customer-receipt-screen"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "user-info"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "display-username"
+                )
+                .innerText =
+                "👤 " + currentUser;
+
+
+            renderMenu();
+
+            renderCart();
+        }
+
+
+        function showAdmin() {
+
+            document
+                .getElementById(
+                    "section-auth"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "section-customer"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "section-admin"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "user-info"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "display-username"
+                )
+                .innerText =
+                "🔑 Admin";
+
+
+            renderMenu();
+
+            renderAdminTables();
+        }
+
+
+        /* =========================================================
+           MENU
+        ========================================================= */
+
+        function renderMenu() {
+
+            const meals =
+                document.getElementById(
+                    "menu-container-meals"
+                );
+
+            const drinks =
+                document.getElementById(
+                    "menu-container-beverages"
+                );
+
+
+            if (!meals || !drinks) return;
+
+
+            meals.innerHTML = "";
+
+            drinks.innerHTML = "";
+
+
+            menu.forEach(item => {
+
+                const card = `
+
+                <div class="menu-card">
+
+                    <div>
+
+                        <h4>
+                            ${escapeHtml(item.name)}
+                        </h4>
+
+                        <div class="price">
+                            ₱${Number(item.price).toFixed(2)}
+                        </div>
+
+                        ${isRiceMeal(item)
+                        ?
+                        `
+                            <small style="
+                                color:var(--primary);
+                                display:block;
+                                margin-bottom:10px;
+                            ">
+                                🍚 Extra rice available
+                            </small>
+                            `
+                        :
+                        ""
+                    }
+
+                    </div>
+
+
+                    <button class="btn btn-primary"
+                            onclick="addToCart(${item.id})">
+
+                        Add to Cart
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+                if (item.category === "meal") {
+
+                    meals.innerHTML += card;
+
+                } else {
+
+                    drinks.innerHTML += card;
+                }
+
+            });
+
+
+            renderAdminMenu();
+        }
+
+
+        function renderAdminMenu() {
+
+            const tbody =
+                document.getElementById(
+                    "admin-menu-list"
+                );
+
+
+            if (!tbody) return;
+
+
+            tbody.innerHTML = "";
+
+
+            menu.forEach(item => {
+
+                tbody.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(item.name)}
+                    </td>
+
+                    <td>
+                        ${item.category === "meal"
+                        ? "🍱 Meal"
+                        : "🥤 Beverage"
+                    }
+                    </td>
+
+                    <td>
+                        ₱${Number(item.price).toFixed(2)}
+                    </td>
+
+                    <td>
+
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteMenuItem(${item.id})">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+            });
+        }
+
+
+        function addMenuItem() {
+
+            const name =
+                document
+                    .getElementById(
+                        "new-item-name"
+                    )
+                    .value
+                    .trim();
+
+
+            const price =
+                Number(
+                    document.getElementById(
+                        "new-item-price"
+                    ).value
+                );
+
+
+            const category =
+                document.getElementById(
+                    "new-item-category"
+                ).value;
+
+
+            if (!name || !price || price <= 0) {
+
+                alert(
+                    "Please enter a valid item name and price."
+                );
+
+                return;
+            }
+
+
+            const newId =
+                menu.length
+                    ? Math.max(
+                        ...menu.map(
+                            m => Number(m.id)
+                        )
+                    ) + 1
+                    : 1;
+
+
+            menu.push({
+
+                id: newId,
+
+                name: name,
+
+                price: price,
+
+                category: category
+
+            });
+
+
+            saveToStorage();
+
+
+            document.getElementById(
+                "new-item-name"
+            ).value = "";
+
+            document.getElementById(
+                "new-item-price"
+            ).value = "";
+
+
+            renderMenu();
+        }
+
+
+        function deleteMenuItem(id) {
+
+            const item =
+                menu.find(
+                    m =>
+                        Number(m.id) ===
+                        Number(id)
+                );
+
+
+            if (!item) return;
+
+
+            if (
+                !confirm(
+                    `Delete "${item.name}" from the menu?`
+                )
+            ) return;
+
+
+            menu =
+                menu.filter(
+                    m =>
+                        Number(m.id) !==
+                        Number(id)
+                );
+
+
+            saveToStorage();
+
+            renderMenu();
+        }
+
+
+        /* =========================================================
+           EXTRA RICE
+        ========================================================= */
+
+        function isRiceMeal(item) {
+
+            if (
+                !item ||
+                item.category !== "meal"
+            ) {
+                return false;
+            }
+
+
+            const name =
+                item.name.toLowerCase();
+
+
+            return (
+                name.includes("rice") ||
+                name.includes("w/ rice") ||
+                name.includes("with rice")
+            );
+        }
+
+
+        function addToCart(itemId) {
+
+            const item =
+                menu.find(
+                    m =>
+                        Number(m.id) ===
+                        Number(itemId)
+                );
+
+
+            if (!item) return;
+
+
+            if (isRiceMeal(item)) {
+
+                customizationItem = item;
+
+                extraRiceQuantity = 0;
+
+
+                document.getElementById(
+                    "customize-item-name"
+                ).innerText =
+                    item.name;
+
+
+                document.getElementById(
+                    "extra-rice-quantity"
+                ).innerText =
+                    "0";
+
+
+                document.getElementById(
+                    "extra-rice-price"
+                ).innerText =
+                    "0.00";
+
+
+                document.getElementById(
+                    "customize-modal"
+                ).classList.remove(
+                    "hidden"
+                );
+
+            } else {
+
+                addItemToCart(
+                    item,
+                    0
+                );
+            }
+        }
+
+
+        function changeExtraRice(amount) {
+
+            extraRiceQuantity += amount;
+
+
+            if (extraRiceQuantity < 0) {
+                extraRiceQuantity = 0;
+            }
+
+
+            if (extraRiceQuantity > 3) {
+                extraRiceQuantity = 3;
+            }
+
+
+            document.getElementById(
+                "extra-rice-quantity"
+            ).innerText =
+                extraRiceQuantity;
+
+
+            document.getElementById(
+                "extra-rice-price"
+            ).innerText =
+                (
+                    extraRiceQuantity *
+                    EXTRA_RICE_PRICE
+                ).toFixed(2);
+        }
+
+
+        function confirmCustomization() {
+
+            if (!customizationItem) return;
+
+
+            addItemToCart(
+                customizationItem,
+                extraRiceQuantity
+            );
+
+
+            closeCustomizeModal();
+        }
+
+
+        function closeCustomizeModal() {
+
+            document
+                .getElementById(
+                    "customize-modal"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            customizationItem = null;
+
+            extraRiceQuantity = 0;
+        }
+
+
+        function addItemToCart(
+            item,
+            extraRice
+        ) {
+
+            const cartKey =
+                `${item.id}-${extraRice}`;
+
+
+            const existing =
+                cart.find(
+                    item =>
+                        item.cartKey ===
+                        cartKey
+                );
+
+
+            if (existing) {
+
+                existing.quantity++;
+
+            } else {
+
+                cart.push({
+
+                    cartKey: cartKey,
+
+                    id: item.id,
+
+                    name: item.name,
+
+                    price: Number(item.price),
+
+                    quantity: 1,
+
+                    extraRice: Number(
+                        extraRice
+                    ),
+
+                    extraRicePrice:
+                        Number(extraRice) *
+                        EXTRA_RICE_PRICE
+
+                });
+            }
+
+
+            renderCart();
+        }
+
+
+        /* =========================================================
+           CART
+        ========================================================= */
+
+        function calculateCartTotal() {
+
+            return cart.reduce(
+                (total, item) => {
+
+                    const unitPrice =
+                        Number(item.price) +
+                        (
+                            Number(
+                                item.extraRice || 0
+                            ) *
+                            EXTRA_RICE_PRICE
+                        );
+
+
+                    return total +
+                        unitPrice *
+                        Number(item.quantity);
+
+                },
+                0
+            );
+        }
+
+
+        function renderCart() {
+
+            const tbody =
+                document.getElementById(
+                    "cart-table-body"
+                );
+
+            const total =
+                document.getElementById(
+                    "cart-total"
+                );
+
+            const checkout =
+                document.getElementById(
+                    "btn-checkout"
+                );
+
+
+            if (!tbody) return;
+
+
+            if (!cart.length) {
+
+                tbody.innerHTML = `
+
+                <tr>
+
+                    <td colspan="4"
+                        style="
+                            text-align:center;
+                            color:var(--text-muted)
+                        ">
+
+                        Cart is empty
+
+                    </td>
+
+                </tr>
+
+            `;
+
+
+                total.innerText =
+                    "0.00";
+
+                checkout.disabled =
+                    true;
+
+                return;
+            }
+
+
+            let cartTotal = 0;
+
+
+            tbody.innerHTML =
+                cart.map(
+                    (item, index) => {
+
+                        const extraRice =
+                            Number(
+                                item.extraRice || 0
+                            );
+
+
+                        const unitPrice =
+                            Number(item.price) +
+                            extraRice *
+                            EXTRA_RICE_PRICE;
+
+
+                        const subtotal =
+                            unitPrice *
+                            Number(item.quantity);
+
+
+                        cartTotal +=
+                            subtotal;
+
+
+                        return `
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    ${escapeHtml(item.name)}
+                                </strong>
+
+                                ${extraRice > 0
+                                ?
+                                `
+                                    <div style="
+                                        color:var(--primary);
+                                        font-size:12px;
+                                        margin-top:4px;
+                                    ">
+                                        🍚 +${extraRice}
+                                        extra rice
+                                        (+₱${(
+                                    extraRice *
+                                    EXTRA_RICE_PRICE
+                                ).toFixed(2)})
+                                    </div>
+                                    `
+                                :
+                                ""
+                            }
+
+                            </td>
+
+
+                            <td>
+                                ₱${unitPrice.toFixed(2)}
+                            </td>
+
+
+                            <td>
+
+                                <div class="cart-controls">
+
+                                    <button class="btn btn-outline btn-sm"
+                                            onclick="changeCartQuantity(${index},-1)">
+                                        −
+                                    </button>
+
+
+                                    <strong>
+                                        ${item.quantity}
+                                    </strong>
+
+
+                                    <button class="btn btn-outline btn-sm"
+                                            onclick="changeCartQuantity(${index},1)">
+                                        +
+                                    </button>
+
+
+                                    <button class="btn btn-danger btn-sm"
+                                            onclick="removeFromCart(${index})">
+                                        🗑
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+                                    ₱${subtotal.toFixed(2)}
+                                </strong>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                    }
+                ).join("");
+
+
+            total.innerText =
+                cartTotal.toFixed(2);
+
+
+            checkout.disabled =
+                false;
+        }
+
+
+        function changeCartQuantity(
+            index,
+            amount
+        ) {
+
+            if (!cart[index]) return;
+
+
+            cart[index].quantity +=
+                amount;
+
+
+            if (
+                cart[index].quantity <= 0
+            ) {
+
+                cart.splice(
+                    index,
+                    1
+                );
+            }
+
+
+            renderCart();
+        }
+
+
+        function removeFromCart(index) {
+
+            cart.splice(
+                index,
+                1
+            );
+
+            renderCart();
+        }
+
+
+        /* =========================================================
+           CHECKOUT
+        ========================================================= */
+
+        function checkout() {
+
+            if (!cart.length) {
+
+                alert(
+                    "Your cart is empty."
+                );
+
+                return;
+            }
+
+
+            const container =
+                document.getElementById(
+                    "order-confirm-items"
+                );
+
+
+            container.innerHTML =
+                cart.map(
+                    item => {
+
+                        const extraRice =
+                            Number(
+                                item.extraRice || 0
+                            );
+
+
+                        const unitPrice =
+                            Number(item.price) +
+                            extraRice *
+                            EXTRA_RICE_PRICE;
+
+
+                        const subtotal =
+                            unitPrice *
+                            Number(item.quantity);
+
+
+                        return `
+
+                        <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            gap:15px;
+                            padding:12px 0;
+                            border-bottom:1px solid #eee;
+                        ">
+
+                            <div>
+
+                                <strong>
+                                    ${escapeHtml(item.name)}
+                                </strong>
+
+                                <div style="
+                                    font-size:12px;
+                                    color:var(--text-muted);
+                                ">
+
+                                    Qty:
+                                    ${item.quantity}
+
+                                    ${extraRice > 0
+                                ?
+                                ` · 🍚 +${extraRice} extra rice`
+                                :
+                                ""
+                            }
+
+                                </div>
+
+                            </div>
+
+
+                            <strong>
+                                ₱${subtotal.toFixed(2)}
+                            </strong>
+
+                        </div>
+
+                    `;
+
+                    }
+                ).join("");
+
+
+            document.getElementById(
+                "order-confirm-total"
+            ).innerText =
+                calculateCartTotal()
+                    .toFixed(2);
+
+
+            document
+                .getElementById(
+                    "order-confirm-modal"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+        }
+
+
+        function cancelOrderConfirmation() {
+
+            document
+                .getElementById(
+                    "order-confirm-modal"
+                )
+                .classList.add(
+                    "hidden"
+                );
+        }
+
+
+        function confirmOrder() {
+
+            if (!cart.length) return;
+
+
+            const now =
+                new Date().toISOString();
+
+
+            const orderId =
+                "ORD-" +
+                String(orderCounter)
+                    .padStart(
+                        3,
+                        "0"
+                    );
+
+
+            const newOrder = {
+
+                id: orderId,
+
+                customer: currentUser,
+
+                items:
+                    JSON.parse(
+                        JSON.stringify(cart)
+                    ),
+
+                total:
+                    calculateCartTotal(),
+
+                status: "Preparing",
+
+                date: now,
+
+                createdAt: now,
+
+                pickedUpAt: null
+
+            };
+
+
+            database.push(
+                newOrder
+            );
+
+
+            orderCounter++;
+
+
+            saveToStorage();
+
+
+            cart = [];
+
+
+            document
+                .getElementById(
+                    "order-confirm-modal"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            renderCart();
+
+
+            showCustomerReceipt(
+                newOrder
+            );
+        }
+
+
+        /* =========================================================
+           CUSTOMER RECEIPT
+        ========================================================= */
+
+        function showCustomerReceipt(order) {
+
+            document
+                .getElementById(
+                    "customer-order-view"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "customer-receipt-screen"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            document.getElementById(
+                "receipt-id"
+            ).innerText =
+                "#" + order.id;
+
+
+            updateReceiptDisplay(
+                order
+            );
+
+
+            document.getElementById(
+                "receipt-total"
+            ).innerText =
+                Number(
+                    order.total
+                ).toFixed(2);
+
+
+            document.getElementById(
+                "receipt-items"
+            ).innerHTML =
+                order.items.map(
+                    item => {
+
+                        const extraRice =
+                            Number(
+                                item.extraRice || 0
+                            );
+
+
+                        const unitPrice =
+                            Number(item.price) +
+                            extraRice *
+                            EXTRA_RICE_PRICE;
+
+
+                        const subtotal =
+                            unitPrice *
+                            Number(item.quantity);
+
+
+                        return `
+
+                        <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            margin-bottom:12px;
+                        ">
+
+                            <div>
+
+                                <strong>
+                                    ${escapeHtml(item.name)}
+                                </strong>
+
+                                <div style="
+                                    font-size:12px;
+                                    color:var(--text-muted);
+                                ">
+
+                                    x${item.quantity}
+
+                                    ${extraRice > 0
+                                ?
+                                ` · +${extraRice} rice`
+                                :
+                                ""
+                            }
+
+                                </div>
+
+                            </div>
+
+
+                            <span>
+                                ₱${subtotal.toFixed(2)}
+                            </span>
+
+                        </div>
+
+                    `;
+
+                    }
+                ).join("");
+        }
+
+
+        function updateReceiptDisplay(
+            order
+        ) {
+
+            const status =
+                document.getElementById(
+                    "receipt-status"
+                );
+
+
+            status.innerText =
+                getCustomerStatusText(
+                    order.status
+                );
+
+
+            status.className =
+                "badge " +
+                getStatusClass(
+                    order.status
+                );
+        }
+
+
+        function getCustomerStatusText(
+            status
+        ) {
+
+            if (status === "Completed") {
+
+                return "Picked Up ✓";
+            }
+
+
+            return status;
+        }
+
+
+        function getStatusClass(
+            status
+        ) {
+
+            if (status === "Ready") {
+
+                return "badge-ready";
+            }
+
+
+            if (status === "Completed") {
+
+                return "badge-completed";
+            }
+
+
+            if (status === "Cancelled") {
+
+                return "badge-cancelled";
+            }
+
+
+            return "badge-preparing";
+        }
+
+
+        function startNewOrder() {
+
+            cart = [];
+
+
+            document
+                .getElementById(
+                    "customer-receipt-screen"
+                )
+                .classList.add(
+                    "hidden"
+                );
+
+
+            document
+                .getElementById(
+                    "customer-order-view"
+                )
+                .classList.remove(
+                    "hidden"
+                );
+
+
+            renderCart();
+        }
+
+
+        /* =========================================================
+           ADMIN TABLES
+        ========================================================= */
+
+        function renderAdminTables() {
+
+            renderAdminMenu();
+
+
+            const active =
+                document.getElementById(
+                    "admin-active-orders"
+                );
+
+
+            if (!active) return;
+
+
+            const activeOrders =
+                database.filter(
+                    order =>
+                        order.status !== "Completed" &&
+                        order.status !== "Cancelled"
+                );
+
+
+            if (!activeOrders.length) {
+
+                active.innerHTML = `
+
+                <tr>
+
+                    <td colspan="6"
+                        style="
+                            text-align:center;
+                            color:var(--text-muted)
+                        ">
+
+                        No active orders
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            } else {
+
+                active.innerHTML =
+                    activeOrders.map(
+                        order => {
+
+                            let actionText =
+                                "Update";
+
+                            if (
+                                order.status ===
+                                "Preparing"
+                            ) {
+
+                                actionText =
+                                    "Mark Ready";
+
+                            } else if (
+                                order.status ===
+                                "Ready"
+                            ) {
+
+                                actionText =
+                                    "Picked Up ✓";
+                            }
+
+
+                            return `
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        #${order.id}
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    ${escapeHtml(
+                                order.customer
+                            )}
+                                </td>
+
+
+                                <td>
+                                    ${formatOrderItems(
+                                order
+                            )}
+                                </td>
+
+
+                                <td>
+                                    ₱${Number(
+                                order.total
+                            ).toFixed(2)}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="badge ${getStatusClass(
+                                order.status
+                            )
+                                }">
+
+                                        ${getCustomerStatusText(
+                                    order.status
+                                )}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <button class="btn btn-primary btn-sm"
+                                            onclick="cycleOrderStatus('${order.id}')">
+
+                                        ${actionText}
+
+                                    </button>
+
+
+                                    <button class="btn btn-danger btn-sm"
+                                            onclick="deleteReceipt('${order.id}')">
+
+                                        🗑️ Delete
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        `;
+
+                        }
+                    ).join("");
+            }
+
+
+            renderSalesReport();
+        }
+
+
+        /* =========================================================
+           ORDER ITEMS
+        ========================================================= */
+
+        function formatOrderItems(
+            order
+        ) {
+
+            return order.items.map(
+                item => {
+
+                    const extra =
+                        Number(
+                            item.extraRice || 0
+                        );
+
+
+                    return `
+
+                    ${escapeHtml(
+                        item.name
+                    )}
+
+                    ×${item.quantity}
+
+                    ${extra > 0
+                            ?
+                            ` 🍚+${extra}`
+                            :
+                            ""
+                        }
+
+                    <br>
+
+                `;
+
+                }
+            ).join("");
+        }
+
+
+        /* =========================================================
+           ORDER STATUS
+        ========================================================= */
+
+        function cycleOrderStatus(
+            orderId
+        ) {
+
+            const order =
+                database.find(
+                    o =>
+                        o.id ===
+                        orderId
+                );
+
+
+            if (!order) return;
+
+
+            /*
+                PREPARING → READY
+            */
+
+            if (
+                order.status ===
+                "Preparing"
+            ) {
+
+                order.status =
+                    "Ready";
+
+
+                saveToStorage();
+
+                renderAdminTables();
+
+                return;
+            }
+
+
+            /*
+                READY → COMPLETED / PICKED UP
+
+                This is the important part:
+                once the customer picks up the order,
+                pickedUpAt is recorded and the order becomes
+                part of the revenue report.
+            */
+
+            if (
+                order.status ===
+                "Ready"
+            ) {
+
+                const pickedUpTime =
+                    new Date()
+                        .toISOString();
+
+
+                order.status =
+                    "Completed";
+
+
+                order.pickedUpAt =
+                    pickedUpTime;
+
+
+                /*
+                    The date used for revenue is the
+                    pickup/completion date.
+
+                    This means the order appears in
+                    the monthly revenue for the month
+                    when it was actually picked up.
+                */
+
+                order.revenueDate =
+                    pickedUpTime;
+
+
+                saveToStorage();
+
+                renderAdminTables();
+
+
+                alert(
+                    `#${order.id} has been marked as PICKED UP.\n\n` +
+                    `₱${Number(order.total).toFixed(2)} has been added to monthly revenue.`
+                );
+
+                return;
+            }
+        }
+
+
+        /* =========================================================
+           DELETE ONE RECEIPT
+        ========================================================= */
+
+        function deleteReceipt(
+            orderId
+        ) {
+
+            if (
+                selectedRole !== "admin"
+            ) {
+
+                alert(
+                    "Only the administrator can delete receipts."
+                );
+
+                return;
+            }
+
+
+            const order =
+                database.find(
+                    o =>
+                        o.id ===
+                        orderId
+                );
+
+
+            if (!order) {
+
+                alert(
+                    "Receipt not found."
+                );
+
+                return;
+            }
+
+
+            const confirmed =
+                confirm(
+
+                    `🗑️ DELETE RECEIPT #${orderId}?\n\n` +
+
+                    `Customer: ${order.customer}\n` +
+
+                    `Status: ${getCustomerStatusText(
+                        order.status
+                    )}\n` +
+
+                    `Total: ₱${Number(
+                        order.total
+                    ).toFixed(2)}\n\n` +
+
+                    "This receipt will be permanently deleted."
+
+                );
+
+
+            if (!confirmed) return;
+
+
+            database =
+                database.filter(
+                    o =>
+                        o.id !==
+                        orderId
+                );
+
+
+            saveToStorage();
+
+
+            renderAdminTables();
+
+
+            alert(
+                `Receipt #${orderId} has been deleted.`
+            );
+        }
+
+
+        /* =========================================================
+           RESET PAST RECEIPTS
+        ========================================================= */
+
+        function resetPastReceipts() {
+
+            if (
+                selectedRole !== "admin"
+            ) {
+
+                alert(
+                    "Only the administrator can reset past receipts."
+                );
+
+                return;
+            }
+
+
+            const pastOrders =
+                database.filter(
+                    order =>
+                        order.status ===
+                        "Completed" ||
+
+                        order.status ===
+                        "Cancelled"
+                );
+
+
+            if (!pastOrders.length) {
+
+                alert(
+                    "There are no completed or cancelled receipts to reset."
+                );
+
+                return;
+            }
+
+
+            const confirmed =
+                confirm(
+
+                    "⚠️ RESET PAST RECEIPTS?\n\n" +
+
+                    `There are ${pastOrders.length} past receipt(s).\n\n` +
+
+                    "This will permanently delete:\n" +
+
+                    "• Completed / Picked Up orders\n" +
+
+                    "• Cancelled orders\n\n" +
+
+                    "Preparing and Ready orders will NOT be deleted.\n\n" +
+
+                    "This action cannot be undone.\n\n" +
+
+                    "Continue?"
+
+                );
+
+
+            if (!confirmed) return;
+
+
+            database =
+                database.filter(
+                    order =>
+                        order.status !==
+                        "Completed" &&
+
+                        order.status !==
+                        "Cancelled"
+                );
+
+
+            saveToStorage();
+
+
+            renderAdminTables();
+
+
+            alert(
+                `${pastOrders.length} past receipt(s) have been reset.`
+            );
+        }
+
+
+        /* =========================================================
+           REVENUE FILTER DEFAULTS
+        ========================================================= */
+
+        function initFilterDefaults() {
+
+            const today =
+                new Date();
+
+
+            const year =
+                today.getFullYear();
+
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const monthInput =
+                document.getElementById(
+                    "filter-month"
+                );
+
+
+            const dateInput =
+                document.getElementById(
+                    "filter-date"
+                );
+
+
+            if (monthInput) {
+
+                monthInput.value =
+                    `${year}-${month}`;
+            }
+
+
+            if (dateInput) {
+
+                dateInput.value =
+                    `${year}-${month}-${day}`;
+            }
+        }
+
+
+        /* =========================================================
+           MONTH KEY
+        ========================================================= */
+
+        function getMonthKey(
+            dateValue
+        ) {
+
+            const date =
+                new Date(
+                    dateValue
+                );
+
+
+            return (
+                date.getFullYear() +
+                "-" +
+                String(
+                    date.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                )
+            );
+        }
+
+
+        /* =========================================================
+           DATE KEY
+        ========================================================= */
+
+        function getDateKey(
+            dateValue
+        ) {
+
+            const date =
+                new Date(
+                    dateValue
+                );
+
+
+            return (
+                date.getFullYear() +
+                "-" +
+                String(
+                    date.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                ) +
+                "-" +
+                String(
+                    date.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                )
+            );
+        }
+
+
+        /* =========================================================
+           REVENUE DATE
+        ========================================================= */
+
+        function getRevenueDate(
+            order
+        ) {
+
+            /*
+                If the order has been picked up,
+                use pickedUpAt.
+
+                This is important because revenue
+                should be based on the actual pickup date,
+                not merely the date the customer placed
+                the order.
+            */
+
+            if (
+                order.pickedUpAt
+            ) {
+
+                return order.pickedUpAt;
+            }
+
+
+            if (
+                order.revenueDate
+            ) {
+
+                return order.revenueDate;
+            }
+
+
+            return order.date;
+        }
+
+
+        /* =========================================================
+           REVENUE RESET CHECK
+        ========================================================= */
+
+        function orderIsAfterRevenueReset(
+            order
+        ) {
+
+            const revenueDate =
+                getRevenueDate(
+                    order
+                );
+
+
+            const monthKey =
+                getMonthKey(
+                    revenueDate
+                );
+
+
+            const resetTime =
+                revenueResets[
+                monthKey
+                ];
+
+
+            if (!resetTime) {
+
+                return true;
+            }
+
+
+            return (
+                new Date(
+                    revenueDate
+                ).getTime()
+                >=
+                new Date(
+                    resetTime
+                ).getTime()
+            );
+        }
+
+
+        /* =========================================================
+           SALES REPORT
+        ========================================================= */
+
+        function renderSalesReport() {
+
+            const tbody =
+                document.getElementById(
+                    "admin-sales-report"
+                );
+
+
+            if (!tbody) return;
+
+
+            const filterType =
+                document.getElementById(
+                    "filter-type"
+                ).value;
+
+
+            const selectedMonth =
+                document.getElementById(
+                    "filter-month"
+                ).value;
+
+
+            const selectedDate =
+                document.getElementById(
+                    "filter-date"
+                ).value;
+
+
+            /*
+                ONLY COMPLETED ORDERS
+
+                Completed = customer picked up
+                Completed orders = revenue
+            */
+
+            let sales =
+                database.filter(
+                    order =>
+                        order.status ===
+                        "Completed"
+                );
+
+
+            /*
+                Apply monthly revenue reset.
+            */
+
+            sales =
+                sales.filter(
+                    order =>
+                        orderIsAfterRevenueReset(
+                            order
+                        )
+                );
+
+
+            /*
+                Apply selected report filter.
+            */
+
+            sales =
+                sales.filter(
+                    order => {
+
+                        const revenueDate =
+                            getRevenueDate(
+                                order
+                            );
+
+
+                        const orderMonth =
+                            getMonthKey(
+                                revenueDate
+                            );
+
+
+                        const orderDate =
+                            getDateKey(
+                                revenueDate
+                            );
+
+
+                        if (
+                            filterType ===
+                            "month"
+                        ) {
+
+                            return (
+                                orderMonth ===
+                                selectedMonth
+                            );
+                        }
+
+
+                        if (
+                            filterType ===
+                            "date"
+                        ) {
+
+                            return (
+                                orderDate ===
+                                selectedDate
+                            );
+                        }
+
+
+                        return true;
+
+                    }
+                );
+
+
+            /*
+                Sort newest pickup first.
+            */
+
+            sales.sort(
+                (
+                    a,
+                    b
+                ) => {
+
+                    return (
+                        new Date(
+                            getRevenueDate(b)
+                        ) -
+                        new Date(
+                            getRevenueDate(a)
+                        )
+                    );
+
+                }
+            );
+
+
+            /*
+                Calculate revenue.
+            */
+
+            const revenue =
+                sales.reduce(
+                    (
+                        total,
+                        order
+                    ) => {
+
+                        return (
+                            total +
+                            Number(
+                                order.total
+                            )
+                        );
+
+                    },
+                    0
+                );
+
+
+            const orderCount =
+                sales.length;
+
+
+            const average =
+                orderCount > 0
+                    ?
+                    revenue /
+                    orderCount
+                    :
+                    0;
+
+
+            /*
+                Update summary cards.
+            */
+
+            document.getElementById(
+                "admin-total-revenue"
+            ).innerText =
+                revenue.toFixed(2);
+
+
+            document.getElementById(
+                "admin-total-orders"
+            ).innerText =
+                orderCount;
+
+
+            document.getElementById(
+                "admin-avg-order"
+            ).innerText =
+                average.toFixed(2);
+
+
+            /*
+                Render sales table.
+            */
+
+            if (!sales.length) {
+
+                tbody.innerHTML = `
+
+                <tr>
+
+                    <td colspan="6"
+                        style="
+                            text-align:center;
+                            color:var(--text-muted);
+                            padding:25px;
+                        ">
+
+                        No picked-up orders found
+                        for this report period.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+                return;
+            }
+
+
+            tbody.innerHTML =
+                sales.map(
+                    order => {
+
+                        const revenueDate =
+                            getRevenueDate(
+                                order
+                            );
+
+
+                        return `
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    #${order.id}
+                                </strong>
+
+                                <div style="
+                                    color:var(--success);
+                                    font-size:11px;
+                                    margin-top:3px;
+                                ">
+                                    ✓ PICKED UP
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                ${formatDateTime(
+                            revenueDate
+                        )}
+
+                            </td>
+
+
+                            <td>
+
+                                ${escapeHtml(
+                            order.customer
+                        )}
+
+                            </td>
+
+
+                            <td>
+
+                                ${formatOrderItems(
+                            order
+                        )}
+
+                            </td>
+
+
+                            <td>
+
+                                <strong style="
+                                    color:var(--success);
+                                ">
+
+                                    ₱${Number(
+                            order.total
+                        ).toFixed(2)}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <button class="btn btn-danger btn-sm"
+                                        onclick="deleteReceipt('${order.id}')">
+
+                                    🗑️ Delete
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                    }
+                ).join("");
+        }
+
+
+        /* =========================================================
+           FILTER TYPE
+        ========================================================= */
+
+        function handleFilterTypeChange() {
+
+            const type =
+                document.getElementById(
+                    "filter-type"
+                ).value;
+
+
+            const monthGroup =
+                document.getElementById(
+                    "month-select-group"
+                );
+
+
+            const dateGroup =
+                document.getElementById(
+                    "date-select-group"
+                );
+
+
+            if (
+                type ===
+                "month"
+            ) {
+
+                monthGroup.classList.remove(
+                    "hidden"
+                );
+
+                dateGroup.classList.add(
+                    "hidden"
+                );
+
+            } else if (
+                type ===
+                "date"
+            ) {
+
+                monthGroup.classList.add(
+                    "hidden"
+                );
+
+                dateGroup.classList.remove(
+                    "hidden"
+                );
+
+            } else {
+
+                monthGroup.classList.add(
+                    "hidden"
+                );
+
+                dateGroup.classList.add(
+                    "hidden"
+                );
+            }
+
+
+            renderAdminTables();
+        }
+
+
+        /* =========================================================
+           PRESET FILTERS
+        ========================================================= */
+
+        function setPresetFilter(
+            preset
+        ) {
+
+            const today =
+                new Date();
+
+
+            const year =
+                today.getFullYear();
+
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            if (
+                preset ===
+                "today"
+            ) {
+
+                document.getElementById(
+                    "filter-type"
+                ).value =
+                    "date";
+
+
+                document.getElementById(
+                    "filter-date"
+                ).value =
+                    `${year}-${month}-${day}`;
+
+            }
+
+
+            if (
+                preset ===
+                "this-month"
+            ) {
+
+                document.getElementById(
+                    "filter-type"
+                ).value =
+                    "month";
+
+
+                document.getElementById(
+                    "filter-month"
+                ).value =
+                    `${year}-${month}`;
+            }
+
+
+            handleFilterTypeChange();
+
+            renderAdminTables();
+        }
+
+
+        /* =========================================================
+           RESET MONTHLY REVENUE
+        ========================================================= */
+
+        function resetMonthlyRevenue() {
+
+            if (
+                selectedRole !== "admin"
+            ) {
+
+                alert(
+                    "Only the administrator can reset monthly revenue."
+                );
+
+                return;
+            }
+
+
+            const filterType =
+                document.getElementById(
+                    "filter-type"
+                ).value;
+
+
+            let monthKey;
+
+
+            /*
+                If viewing a specific month,
+                reset that month.
+
+                If viewing another filter,
+                reset the current calendar month.
+            */
+
+            if (
+                filterType ===
+                "month"
+            ) {
+
+                monthKey =
+                    document.getElementById(
+                        "filter-month"
+                    ).value;
+
+            } else {
+
+                monthKey =
+                    getMonthKey(
+                        new Date()
+                    );
+            }
+
+
+            if (!monthKey) {
+
+                alert(
+                    "Please select a month first."
+                );
+
+                return;
+            }
+
+
+            const ordersBeforeReset =
+                database.filter(
+                    order => {
+
+                        if (
+                            order.status !==
+                            "Completed"
+                        ) {
+
+                            return false;
+                        }
+
+
+                        const revenueDate =
+                            getRevenueDate(
+                                order
+                            );
+
+
+                        return (
+                            getMonthKey(
+                                revenueDate
+                            ) ===
+                            monthKey
+                        );
+                    }
+                );
+
+
+            const confirmed =
+                confirm(
+
+                    `🔄 RESET MONTHLY REVENUE?\n\n` +
+
+                    `Month: ${monthKey}\n` +
+
+                    `Current picked-up orders: ${ordersBeforeReset.length}\n\n` +
+
+                    "This will reset the revenue calculation for this month.\n\n" +
+
+                    "The order records will remain stored, but they will no longer count toward this month's revenue after the reset.\n\n" +
+
+                    "Continue?"
+
+                );
+
+
+            if (!confirmed) return;
+
+
+            revenueResets[
+                monthKey
+            ] =
+                new Date()
+                    .toISOString();
+
+
+            saveToStorage();
+
+
+            renderAdminTables();
+
+
+            alert(
+                `Monthly revenue for ${monthKey} has been reset.`
+            );
+        }
+
+
+        /* =========================================================
+           FORMAT DATE
+        ========================================================= */
+
+        function formatDateTime(
+            dateValue
+        ) {
+
+            const date =
+                new Date(
+                    dateValue
+                );
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return "Unknown";
+            }
+
+
+            return date.toLocaleString(
+                undefined,
+                {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit"
+                }
+            );
+        }
+
+
+        /* =========================================================
+           ESCAPE HTML
+        ========================================================= */
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value
+            )
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+        }
+
+    </script>
+
+</body>
+</html>
